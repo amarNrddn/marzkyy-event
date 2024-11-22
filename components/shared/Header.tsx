@@ -3,6 +3,8 @@ import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
 import { Button } from '../ui/button'
+import NavItems from './NavItems'
+import MobileNav from './MobileNav'
 
 const Header = () => {
    return (
@@ -17,9 +19,16 @@ const Header = () => {
                />
             </Link>
 
-            <div className="">
+            <SignedIn>
+               <nav className='hidden md:flex-between max-w-xs w-full '>
+                  <NavItems />
+               </nav>
+            </SignedIn>
+
+            <div className="flex gap-3 w-36 justify-end ">
                <SignedIn>
                   <UserButton afterSignOutUrl='/' />
+                  <MobileNav />
                </SignedIn>
                <SignedOut>
                   <Button asChild className='rounded-full' size={'lg'}>
