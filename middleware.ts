@@ -1,25 +1,28 @@
-import { clerkMiddleware } from '@clerk/nextjs/server';
+import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server'
 
-export default clerkMiddleware({
-   publicRoutes: [
+// Tentukan rute yang dilindungi menggunakan createRouteMatcher
+const isProtectedRoute = createRouteMatcher([
+   '/api/webhook/clerk',
+   '/api/webhook/stripe',
+   '/api/uploadthing'
+])
+
+export default clerkMiddleware(async (auth, req) => {
+   // Jika rute cocok dengan yang dilindungi, pastikan otentikasi pengguna
+   if (isProtectedRoute(req)) await auth.protect()
+})
+
+export const config = {
+   matcher: [
+      // Abaikan rute internal Next.js dan file statis kecuali ditemukan dalam parameter pencarian
+      '/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
+      // Selalu jalankan untuk API routes
+      '/(api|trpc)(.*)',
+      // Menentukan rute lainnya yang sesuai
       '/',
       '/event/:id',
       '/api/webhook/clerk',
       '/api/webhook/stripe',
       '/api/uploadthing',
    ],
-   ignoredRoutes: [
-      '/api/webhook/clerk',
-      '/api/webhook/stripe',
-      '/api/uploadthing',
-   ],
-});
-
-export const config = {
-   matcher: [
-      // Matcher untuk menangani semua rute kecuali file statis dan Next.js internals
-      '/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
-      // Selalu aktifkan untuk API routes
-      '/(api|trpc)(.*)',
-   ],
-};
+}
