@@ -9,7 +9,7 @@ import MobileNav from './MobileNav'
 const Header = () => {
    return (
       <header className='w-full border-b'>
-         <div className=" py-3 px-5 flex items-center justify-between ">
+         <div className=" wrapper flex items-center justify-between ">
             <Link href={'/'} className=''>
                <Image
                   src={"/assets/images/logo.png"}
